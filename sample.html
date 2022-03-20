@@ -1,0 +1,276 @@
+<html>
+
+<head>
+    <title>µWeb usage sample</title>
+    <meta charset="utf-8" />
+    <link rel="StyleSheet" href="µWeb.css">
+    <link rel="StyleSheet" href="µWeb-sample.css">
+    <script src="µWeb.js"></script>
+    <script>
+        // Population
+        var sampleData = {
+            name: "XWolf",
+            surname: "Override",
+            date: "20/03/2022",
+            mode: "population",
+            style: "background-color:tomato",
+            border: 3,
+        }
+        function showDataResolution() {
+            var div = document.getElementById("sample-resolution");
+            div.classList.add("show");
+            µWeb.populate(div, sampleData);
+        }
+        function showDataResolutionA() {
+            sampleData.mode = "resolution";
+            sampleData.border = 1;
+            sampleData.style = "background-color:teal; color:white;";
+            µWeb.populate(document.getElementById("sample-resolution"), sampleData);
+        }
+        function showDataResolutionB() {
+            sampleData.mode = "thing";
+            sampleData.border = 5;
+            sampleData.style = "background-color:tomato";
+            µWeb.populate(document.getElementById("sample-resolution"), sampleData);
+        }
+        function hideDataResolution() {
+            var div = document.getElementById("sample-resolution");
+            div.classList.remove("show");
+        }
+
+        // Repetition
+        var rProd, rCart;
+        var sampleList = [
+            { id: "Printer", price: 75 },
+            { id: "Potato", price: 1 },
+            { id: "Clock", price: 13 },
+            { id: "Orange", price: 1 },
+            { id: "Cheese", price: 17 },
+        ];
+        var sampleCart = [];
+        function showRepeater() {
+            var div = document.getElementById("sample-repetition");
+            div.classList.add("show");
+            if (!rProd) {
+                rProd = µWeb.repeater(document.getElementById("sample-repetition-product"));
+            }
+            if (!rCart) {
+                rCart = µWeb.repeater(document.getElementById("sample-repetition-cart"));
+            }
+            rProd.feed(sampleList);
+            rCart.feed(sampleCart);
+        }
+        function buyProduct(elem) {
+            // get linked product
+            var prod = elem._link._repeater_data;
+            var cprod = null;
+            for (var i in sampleCart)
+                if (sampleCart[i].id == prod.id) {
+                    cprod = sampleCart[i];
+                    break;
+                }
+            if (!cprod) {
+                cprod = { from: prod, id: prod.id, price: prod.price, ctt: 1 };
+                sampleCart.push(cprod);
+            } else {
+                cprod.ctt++;
+                cprod.price = cprod.ctt * cprod.from.price;
+            }
+            updateCart();
+        }
+        function moreProduct(elem) {
+            // get linked product
+            var cprod = elem._link._repeater_data;
+            cprod.ctt++;
+            cprod.price = cprod.ctt * cprod.from.price;
+            updateCart();
+        }
+        function lessProduct(elem) {
+            // get linked product
+            var cprod = elem._link._repeater_data;
+            if (cprod.ctt == 1) {
+                removeProduct(elem);
+                return;
+            }
+            cprod.ctt--;
+            cprod.price = cprod.ctt * cprod.from.price;
+            updateCart();
+        }
+        function removeProduct(elem) {
+            // get linked product
+            var cprod = elem._link._repeater_data;
+            for (var i in sampleCart) {
+                if (sampleCart[i] == cprod)
+                    sampleCart.splice(i, 1);
+            }
+            updateCart();
+        }
+        function updateCart() {
+            rCart.feed(sampleCart);
+            var total = 0;
+            for (var i in sampleCart)
+                total += sampleCart[i].price;
+            document.getElementById("sample-repetition-cart-total").innerText = "Total: " + total + "€";
+        }
+
+        // Dialog
+        function showDialog() {
+            µWeb.dialog("dg-data", d => {
+                µWeb.populate(d.get(), sampleData);
+            }, {
+                ok: d => {
+                    for (var k in sampleData)
+                        sampleData[k] = d.get("f" + k).value;
+                    d.close();
+                    showDataResolution();
+                }, cancel: d => {
+                    d.close();
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+    <!-- INTRO (See below for samples) -->
+    <div class="title">
+        µWeb (C) XWolf Override 2022 (MIT license)
+    </div>
+
+    <div class="explanation">
+        <p>µWeb is an extremely small library that helps in the development of javascript frontends.</p>
+        <p>
+            Is not recommended to use on big applications, only on small ones where there is no need to use bigger
+            frameworks like <a href="https://github.com/XWolfOverride/wolf.js">wolf.js</a><br />
+            µWeb does not support advanced wolf.js features like:
+        <ul>
+            <li>Data binding on screen, (only data resolution through linked attributes is supported)</li>
+            <li>Screen composition (use multiple files to compose the screen)</li>
+            <li>Single page navigation (one single page mimics a multi page navigation w/o loosing of javascript data)
+            </li>
+        </ul>
+        µWeb supports:
+        <ul>
+            <li>Data resolution through linked attributes. <span class="action"
+                    onclick="showDataResolution()">Show</span></li>
+            <li>Element repeating based on source data. <span class="action" onclick="showRepeater()">Show</span></li>
+            <li>Easy popup dialogs handling. <span class="action" onclick="showDialog()">Show</span></li>
+        </ul>
+        </p>
+    </div>
+    <!-- RESOLUTION -->
+    <div id="sample-resolution">
+        This panel uses a <span data-#="mode" style="text-decoration:underline"></span> technique where data is linked
+        to screen based on data attributes.
+        <div data-style="style" data-width="width">
+            Open browser's development javascript console and change the field values of the object <i>sampleData</i>
+            and click
+            again the Show action to update screen, use options below, or use the dialog sample
+        </div>
+        <div><b>Data:</b></div>
+        <ul>
+            <li>name:<span data-#="name"></span></li>
+            <li>surname:<span data-#="surname"></span></li>
+            <li>date:<span data-#="date"></span></li>
+            <li>mode:<span data-#="mode"></span></li>
+            <li>style:<span data-#="style"></span></li>
+            <li>border:<span data-#="border"></span></li>
+        </ul>
+        <table data-border="border">
+            <tr>
+                <td>name</td>
+                <td data-#="name"></td>
+            </tr>
+            <tr>
+                <td>surname</td>
+                <td data-#="surname"></td>
+            </tr>
+            <tr>
+                <td>date</td>
+                <td data-#="date"></td>
+            </tr>
+            <tr>
+                <td>mode</td>
+                <td data-#="mode"></td>
+            </tr>
+            <tr>
+                <td>style</td>
+                <td data-#="style"></td>
+            </tr>
+            <tr>
+                <td>border</td>
+                <td data-#="border"></td>
+            </tr>
+        </table>
+        <span class="action" onclick="showDataResolutionA()">Change data (A)</span> |
+        <span class="action" onclick="showDataResolutionB()">Change data (B)</span> |
+        <span class="action" onclick="hideDataResolution()">Hide</span>
+    </div>
+    <!-- REPEATER -->
+    <div id="sample-repetition">
+        <div id="sample-repetition-product-list">
+            <div id="sample-repetition-product" class="product item">
+                <div class="name" data-#="id"></div>
+                <div class="price" data-#="price"></div>
+                <div class="actions">
+                    <span class="action" onclick="buyProduct(this)">Buy</span>
+                </div>
+            </div>
+        </div>
+        <div id="sample-repetition-cart-list">
+            <div>
+                <div id="sample-repetition-cart" class="cart item">
+                    <div class="name"><span data-#="id"></span> (<span data-#="ctt"></span>)</div>
+                    <div class="price" data-#="price"></div>
+                    <div class="actions">
+                        <span class="action" onclick="moreProduct(this)">More</span> |
+                        <span class="action" onclick="lessProduct(this)">Less</span> |
+                        <span class="action cancel" onclick="removeProduct(this)">Remove</span>
+                    </div>
+                </div>
+            </div>
+            <div id="sample-repetition-cart-total"></div>
+        </div>
+        <div class="clear-float"></div>
+    </div>
+    <!-- DIALOGS -->
+    <div id="wall">
+        <div id="dg-data" class="dialog">
+            <div id="dg-data-title" class="dialog-header">Options</div>
+            <div class="dialog-body">
+                <table>
+                    <tr>
+                        <td>name</td>
+                        <td><input id="dg-data-fname" data-value="name"></td>
+                    </tr>
+                    <tr>
+                        <td>surname</td>
+                        <td><input id="dg-data-fsurname" data-value="surname"></td>
+                    </tr>
+                    <tr>
+                        <td>date</td>
+                        <td><input id="dg-data-fdate" data-value="date"></td>
+                    </tr>
+                    <tr>
+                        <td>mode</td>
+                        <td><input id="dg-data-fmode" data-value="mode"></td>
+                    </tr>
+                    <tr>
+                        <td>style</td>
+                        <td><input id="dg-data-fstyle" data-value="style"></td>
+                    </tr>
+                    <tr>
+                        <td>border</td>
+                        <td><input id="dg-data-fborder" data-value="border"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="dialog-footer">
+                <button id="dg-data-ok">Ok</button>
+                <button id="dg-data-cancel">Cancel</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

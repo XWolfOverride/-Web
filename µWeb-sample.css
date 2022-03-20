@@ -1,0 +1,90 @@
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    font-family: sans-serif;
+    color: var(--color-text);
+}
+
+.title {
+    font-size: 1.5rem;
+    padding: 0.5rem 1rem;
+}
+
+.explanation {
+    padding: 0.5rem 1rem;
+    background-color: burlywood;
+}
+
+.action {
+    cursor: pointer;
+    color: #2b5792;
+}
+
+.action.cancel {
+    color: #922b2b;
+}
+
+.action:hover {
+    text-decoration: underline double;
+}
+
+#sample-resolution {
+    display: none;
+}
+
+#sample-resolution.show {
+    display: block;
+}
+
+#sample-repetition {
+    display: none;
+}
+
+#sample-repetition.show {
+    display: block;
+}
+
+#sample-repetition-product-list {
+    float: left;
+}
+
+#sample-repetition-cart-list {
+    float: right;
+}
+
+#sample-repetition-cart-total{
+    text-align: right;
+}
+
+.clear-float {
+    clear: both;
+}
+
+.item {
+    border-top: 1px solid silver;
+    padding: 0.5rem 1rem;
+    position: relative;
+}
+
+.item .name {
+    border-top: 1x solid silver;
+    padding-right: 3rem;
+    position: relative;
+}
+
+.item .price {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+}
+
+.item .price::after {
+    content: "€";
+}
+
+.item .actions {
+    text-align: right;
+}

@@ -1,0 +1,78 @@
+:root {
+    --color-base: #b8cbf1;
+    --color-text: #111111;
+    --color-button: #5e7fc0;
+    --color-button-text: #ffffff;
+    --color-button-hover: #6b88c2;
+    --color-dialog-modal-wall: #11111169;
+}
+
+/*
+========= Dialogs:
+*/
+
+#wall {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-dialog-modal-wall);
+    z-index: 100;
+    display: none;
+}
+
+#wall.show {
+    display: block;
+}
+
+.dialog {
+    z-index: 110;
+    background-color: var(--color-base);
+    padding: 1rem;
+    border-radius: 0.4rem;
+    position: absolute;
+    margin-left: 50vw;
+    margin-top: 50vh;
+    display: none;
+    transform: translate(-50%,-50%);
+}
+
+.dialog.show {
+    display: block;
+}
+
+.dialog button {
+    font-size: 15px;
+    height: 1.6rem;
+    border: none;
+    background-color: var(--color-button);
+    border-radius: 0.3rem;
+    color: var(--color-button-text);
+    cursor: pointer;
+}
+
+.dialog button:hover {
+    background-color: var(--color-button-hover);
+}
+
+.dialog-header {
+    padding: 0.5rem;
+    font-size: large;
+    font-weight: bold;
+    border-bottom: 1px solid var(--color-button);
+    margin: -1rem -1rem 0 -1rem;
+}
+
+.dialog-body {
+    padding: 1rem 0;
+}
+
+.dialog-footer {
+    background: var(--color-button);
+    margin: 0 -1rem -1rem -1rem;
+    padding: 0.5rem 1rem;
+    border-bottom-left-radius: 0.4rem;
+    border-bottom-right-radius: 0.4rem;
+    text-align: right;
+}
